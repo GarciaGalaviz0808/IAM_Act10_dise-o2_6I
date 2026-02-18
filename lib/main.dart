@@ -27,11 +27,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passController = TextEditingController();
   bool _isObscured = true;
 
-  // Paleta de colores
-  final Color darkBrown = const Color(0xFF3E2723);    // Café muy oscuro (Letras)
-  final Color mediumBrown = const Color.fromARGB(255, 78, 44, 31);  // Café intermedio (Botones)
-  final Color hoverBrown = const Color.fromARGB(255, 133, 93, 78);   // Café más ligero (Hover)
-  final Color lightBrown = const Color(0xFFD7CCC8);   // Café muy claro (Fondo)
+  // Paleta de colores corregida
+  final Color darkBrown = const Color(0xFF3E2723);    
+  final Color mediumBrown = const Color.fromARGB(255, 78, 44, 31);  
+  final Color hoverBrown = const Color.fromARGB(255, 133, 93, 78);   
+  final Color lightBrown = const Color(0xFFD7CCC8);   
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.palette, size: 60, color: darkBrown), // Icono más grande
+                  Icon(Icons.palette, size: 60, color: darkBrown), 
                   Text(
                     'ArtStore',
                     style: TextStyle(
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 120),
 
                     // Pincel al lado de la "I" de Iniciar Sesión
                     Row(
@@ -112,8 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildAnimatedButton(
                       text: "Iniciar Sesión",
                       onPressed: () {
-                        print("Usuario: ${_userController.text}");
-                        print("Clave: ${_passController.text}");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Iniciando sesión con: ${_userController.text}')),
+                        );
                       },
                     ),
 
@@ -125,8 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     const SizedBox(height: 40),
+                    // Corrección de withOpacity: usando withValues (API nueva) o Color.withAlpha
                     Text('¿No tienes cuenta?',
-                        style: TextStyle(color: darkBrown.withOpacity(0.8))),
+                        style: TextStyle(color: darkBrown.withValues(alpha: 0.8))),
                     const SizedBox(height: 10),
 
                     // Botón Regístrate pequeño
@@ -145,7 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Widget para etiquetas con iconos originales
   Widget _buildLabel(IconData icon, String text) {
     return Row(
       children: [
@@ -156,12 +157,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Widget para campos de texto funcionales
   Widget _buildTextField(TextEditingController controller, bool obscure,
       {bool isPassword = false, VoidCallback? onSuffixTap}) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.3),
+        // Corrección de opacity aquí también
+        color: Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
@@ -190,22 +191,21 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // BOTÓN PERSONALIZADO CON EFECTO HOVER Y SOMBRA
   Widget _buildAnimatedButton({required String text, required VoidCallback onPressed, bool isSmall = false}) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
           if (states.contains(WidgetState.hovered)) return hoverBrown;
-          return mediumBrown; // Color café relleno
+          return mediumBrown; 
         }),
         foregroundColor: WidgetStateProperty.all(Colors.white),
-        elevation: WidgetStateProperty.all(8), // Sombreado
-        shadowColor: WidgetStateProperty.all(Colors.black54),
+        elevation: WidgetStateProperty.all(8), 
+        shadowColor: WidgetStateProperty.all(Colors.black.withValues(alpha: 0.5)),
         padding: WidgetStateProperty.all(
           EdgeInsets.symmetric(horizontal: isSmall ? 30 : 0, vertical: 15),
         ),
-        minimumSize: WidgetStateProperty.all(Size(isSmall ? 120 : double.infinity, 50)),
+        minimumSize: WidgetStateProperty.all(Size(isSmall ? 120 : double.infinity, 55)),
         shape: WidgetStateProperty.all(const StadiumBorder()),
       ),
       child: Text(
